@@ -1,0 +1,208 @@
+---
+title: "Geography 176A Lab 1"
+subtitle: "Meet R, RMarkdown, & Github"
+author: Mike Johnson
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: 
+  html_document:
+    theme: paper
+    code_download: true
+---
+
+## Objectives:
+
+- Fork a Git Repo
+- Meet RMarkdown 
+- See some basic data
+
+## Your Assignment:
+
+1. Read this document in both knit and raw Rmd format to review Rmarkdown syntax.
+2. Change the author in the YML to your name
+2. Modify the city threshold to 100,000 (no comma!!)
+3. Re-knit the document
+4. From the knit document, right click on the map image and save it to the img directory.
+5. Push your changes back to your Github repo
+6. Submit the URL to your repo and the saved map image to the Guachospace Dropbox.
+
+## Data: USA Cites
+
+Accessed 07/27/2020 from: https://simplemaps.com/data/us-cities
+
+# What is Rmarkdown:
+
+R Markdown provides an unified authoring framework for data science, combining  code, results, and   commentary. R Markdown documents are fully reproducible and support dozens of output formats, like PDFs, Word files, slideshows, and more.
+
+![](../img/rmarkdownflow.png)
+
+It contains three important types of content:
+
+1. An (optional) YAML header surrounded by ---s which defines the: 
+
+ - Output type
+ - theme
+ - metadata (author/date/title. subtitle)
+ 
+2. Text mixed with simple text formatting like # heading and _italics_.
+
+3. Chunks of code surrounded by ```.
+
+# How do I make this thing run?
+
+Once, and only when, the document is saved ... Hit,
+
+`Cmd/Ctrl + SHIFT + K`
+
+or the `knit` button above.
+
+# Where do I see the output?
+
+The document will knit to the same directory as the Rmd in the format defined.
+
+Click the settings (wheel) icon next to `knit` to render the output document in a new window (Preview in Window) or in the RStudio Viewer Pane
+(Preview in Viewer Pane)
+
+## RMarkdown formatting basics
+
+Block Quote:
+
+> R Markdown provides an authoring framework for data science. You can use a single R Markdown file to both
+
+# Header 1 (H1)
+## Header 2 (H2)
+### Header 2 (H3)
+#### Header 4 (H4)
+##### Header 5 (H5)
+
+- a bulletpointed
+- list of 
+- things
+
+1. Or a 
+2. numbered list
+3. of things
+    a. Maybe with some nested sections
+    b. like this
+4. Then something else...
+
+I can make something **bold** with double asterisks, or *italicized* with single asterisks. 
+
+Make something superscripted^UP^ or subscripted~DOWN~
+
+I can add a regular hyperlink by just writing the URL: https://github.com/mikejohnson51/spds
+
+Or I can have [linked text](https://github.com/mikejohnson51/spds).
+
+I can add an image: 
+
+![](../img/globe-image.jpg)
+
+And I can refine the image: 
+
+![](../img/globe-image.jpg){width="50%"}
+
+I can also add document breaks:
+
+*****
+
+# Code 
+
+These are teasers for where we are going. If the code doesn't yet make sense that is expected!
+
+Focus on what we are doing with Rmarkdown... the exposure to this code and workflow will help when we get to discussing them next week.
+
+All code is run is code snippets. Code snippets can be auto generated with:
+
+`Cmd/Ctrl + Alt + I`
+
+or by clicking "insert"
+
+***
+
+The following table summarizes which types of output each option **suppresses**:
+
+|       Option      	| Run code 	| Show code 	| Output 	| Plots 	| Messages 	| Warnings 	|
+|:-----------------:	|:--------:	|:---------:	|:------:	|:-----:	|:--------:	|:--------:	|
+| eval = FALSE      	| X        	|           	| X      	| X     	| X        	| X        	|
+| include = FALSE   	|          	| X         	| X      	| X     	| X        	| X        	|
+| echo = FALSE      	|          	| X         	|        	|       	|          	|          	|
+| results = "hide"  	|          	|           	| X      	|       	|          	|          	|
+| fig.show = "hide" 	|          	|           	|        	| X     	|          	|          	|
+| message = FALSE   	|          	|           	|        	|       	| X        	|          	|
+| warning = FALSE   	|          	|           	|        	|       	|          	| X        	|
+
+
+# Inline code:
+
+Read in our data:
+
+```{r, message = FALSE, warning = FALSE}
+# load tidyverse
+library(tidyverse)
+
+# read in city data
+cities = readr::read_csv('../data/uscities.csv')
+```
+
+# Exploration
+
+Here we see some basic data exploration tools to see what our data looks like:
+
+```{r, eval = TRUE}
+names(cities)
+head(cities)
+summary(cities)
+str(cities)
+dim(cities)
+```
+
+# Some basic Data Exploration
+
+Which an understanding of the data, lets answers a few questions:
+
+```{r}
+# Which cities are the most dense?
+cities %>%
+  select(city, state_id, population, density) %>%
+  arrange(-density) %>%
+  head()
+
+# Which cities have the most people?
+cities %>%
+  select(city, state_id, population, density) %>%
+  arrange(-population) %>%
+  head()
+```
+
+## In line code:
+
+```{r, echo = FALSE}
+threshold = 1000000
+big_cities = 
+  filter(cities, population > threshold) %>%
+  filter(!state_name %in% c("Alaska", "Hawaii", "Puerto Rico"))
+```
+
+We can evaluate R variables and code in-line:
+
+For example, there are `r nrow(big_cities)` cities with a population greater then `r formatC(threshold, format="d", big.mark=",")`.
+
+Here is a map!
+
+```{r, echo = FALSE}
+big_cities %>% 
+  ggplot() + 
+  aes(x = lng, y = lat) + 
+  geom_point(aes(size = population, color = density)) + 
+  scale_color_gradient(low = "blue", high = "red") + 
+  labs(title = "USA Cities Population Stats",
+       subtitle = paste("Cities bigger then:", 
+                        formatC(threshold, format="d", big.mark=","),
+                        "people"),
+       caption = paste("Made by:", rmarkdown::metadata$author, "- Geography 176A"),
+       x="",
+       y = "") + 
+  theme_bw()
+```
+
+
