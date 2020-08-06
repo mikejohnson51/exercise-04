@@ -21,9 +21,9 @@ output:
 2. Change the author in the YML to your name
 2. Modify the city threshold to 100,000 (no comma!!)
 3. Re-knit the document
-4. From the knit document, right click on the map image and save it to the img directory.
-5. Push your changes back to your Github repo
-6. Submit the URL to your repo and the saved map image to the Guachospace Dropbox.
+4. From the knit document, right click on the final map image and save it to the `img` directory.
+5. Push your changes back to your repo
+6. Submit the URL to your repo and the saved image to the Guachospace Dropbox.
 
 ## Data: USA Cites
 
