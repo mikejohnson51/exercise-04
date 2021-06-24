@@ -1,5 +1,5 @@
 ---
-title: "Geography 176A Lab 1"
+title: "Geography 13 Actvity 4"
 subtitle: "Meet R, RMarkdown, & Github"
 author: Mike Johnson
 date: "`r format(Sys.time(), '%d %B, %Y')`"
@@ -199,7 +199,7 @@ big_cities %>%
        subtitle = paste("Cities bigger then:", 
                         formatC(threshold, format="d", big.mark=","),
                         "people"),
-       caption = paste("Made by:", rmarkdown::metadata$author, "- Geography 176A"),
+       caption = paste("Made by:", rmarkdown::metadata$author, "- Geography 13"),
        x="",
        y = "") + 
   theme_bw()
