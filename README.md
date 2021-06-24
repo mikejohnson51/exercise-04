@@ -1,5 +1,5 @@
 # Daily Exercise 04: 
-### Geography 176A Summer 2020
+### Geography 13 Summer 2021
 
 *****
 
